@@ -1,0 +1,75 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: hotel-booking-api
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
+      tags-sorter: alpha
+      operations-sorter: alpha
+    api-docs:
+      path: /v3/api-docs
+    api-info:
+      title: Hotel Booking API
+      description: "RESTful API for a comprehensive hotel booking system."
+      version: "1.0.0"
+      contact:
+        name: API Support
+        email: support@example.com
+  profiles:
+    active: dev
+
+---
+# ===================================================================
+# DEVELOPMENT PROFILE
+# ===================================================================
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  datasource:
+
+    url: jdbc:mysql://localhost:3306/hotelbooking_db_dev?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: ${DB_DEV_USERNAME:root}
+    password: ${DB_DEV_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.example.hotelbooking: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+  datasource:
+    url: ${DB_PROD_URL}
+    username: ${DB_PROD_USERNAME}
+    password: ${DB_PROD_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+logging:
+  level:
+    root: WARN
+    com.hotelbooking: INFO
